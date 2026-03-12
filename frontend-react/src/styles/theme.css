@@ -1,0 +1,75 @@
+/* COLOR VARIABLES */
+:root {
+  --primary: #28a745;
+  --secondary: #1e3c72;
+  --dark: #212529;
+  --light: #f8f9fa;
+  --white: #ffffff;
+  --shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* GLOBAL RESET */
+body {
+  margin: 0;
+  font-family: "Segoe UI", sans-serif;
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
+}
+
+/* GLASS CARD */
+.glass-card {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: var(--shadow);
+  color: white;
+}
+
+/* PAGE CENTER */
+.page-center {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* BUTTON STYLE */
+.primary-btn {
+  background: var(--primary);
+  border: none;
+  padding: 10px 25px;
+  border-radius: 6px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.primary-btn:hover {
+  opacity: 0.85;
+}
+
+/* DASHBOARD CONTAINER */
+.dashboard-container {
+  padding: 40px;
+  color: white;
+}
+
+.dashboard-title {
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+/* STAT CARDS */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.stat-card {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+}
