@@ -33,6 +33,13 @@ public class ProfileController {
         User user = userRepository.findById(userId).orElse(null);
 
         Map<String, Object> profileData = new HashMap<>();
+
+        // FIX: was calling user.getRole() without null check — NPE if user not found
+        if (user == null) {
+            profileData.put("error", "User not found");
+            return profileData;
+        }
+
         profileData.put("user", user);
 
         if ("FARMER".equals(user.getRole())) {

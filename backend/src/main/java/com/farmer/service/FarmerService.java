@@ -15,31 +15,45 @@ import com.farmer.repository.FarmerRepository;
 @Service
 public class FarmerService {
 
-    @Autowired private FarmerRepository repo;
-    private final String uploadDir = "uploads/";
+    @Autowired
+    private FarmerRepository farmerRepository;
 
+    // GET PROFILE
     public Farmer getFarmerById(Long id) {
-        return repo.findById(id).orElseThrow();
+        return farmerRepository.findById(id).orElse(null);
     }
 
-    public Farmer updateFarmer(Long id, Farmer f, MultipartFile file) throws Exception {
-        Farmer existing = repo.findById(id).orElseThrow();
-        
-        existing.setName(f.getName());
-        existing.setPhone(f.getPhone());
-        existing.setLocation(f.getLocation());
-        
-        if (file != null && !file.isEmpty()) {
-            File directory = new File(uploadDir);
-            if (!directory.exists()) {
-                directory.mkdir();
+    // UPDATE PROFILE
+    public Farmer updateFarmer(Long id, Farmer farmer, MultipartFile file) throws Exception {
+        Farmer existingFarmer = farmerRepository.findById(id).orElse(null);
+        if (existingFarmer != null) {
+            if (file != null && !file.getOriginalFilename().isEmpty()) {
+                String fileName = file.getOriginalFilename();
+                Path filePath = Paths.get("src/main/resources/static/images/", fileName);
+                File destinationFile = new File(filePath.toUri());
+                file.transferTo(destinationFile);
+                existingFarmer.setProfileImage(fileName);
             }
-            String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-            Path path = Paths.get(uploadDir + fileName);
-            Files.write(path, file.getBytes());
-            existing.setProfileImage("http://localhost:8080/uploads/" + fileName);
+            existingFarmer.setName(farmer.getName());
+            existingFarmer.setEmail(farmer.getEmail());
+            existingFarmer.setPhone(farmer.getPhone());
+            return farmerRepository.save(existingFarmer);
         }
-        
-        return repo.save(existing);
+        return null;
+    }
+
+    // UPLOAD PROFILE IMAGE
+    public String uploadProfileImage(Long id, MultipartFile file) throws Exception {
+        Farmer existingFarmer = farmerRepository.findById(id).orElse(null);
+        if (existingFarmer != null) {
+            String fileName = file.getOriginalFilename();
+            Path filePath = Paths.get("src/main/resources/static/images/", fileName);
+            File destinationFile = new File(filePath.toUri());
+            file.transferTo(destinationFile);
+            existingFarmer.setProfileImage(fileName);
+            farmerRepository.save(existingFarmer);
+            return "Profile image uploaded successfully";
+        }
+        return "Farmer not found";
     }
 }

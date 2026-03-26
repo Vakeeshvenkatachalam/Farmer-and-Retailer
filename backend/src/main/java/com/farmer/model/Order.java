@@ -1,6 +1,7 @@
 package com.farmer.model;
 
-import java.time.LocalDateTime;
+import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,7 +21,9 @@ public class Order {
     private Long retailerId;
     private int quantity;
     private double totalPrice;
-    private LocalDateTime orderDate;
+    
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private Date orderDate;
     
     private String orderStatus; // PENDING, CONFIRMED, SHIPPED, DELIVERED
     private String paymentStatus; // PENDING, PAID, FAILED
@@ -42,8 +45,8 @@ public class Order {
     public double getTotalPrice() { return totalPrice; }
     public void setTotalPrice(double totalPrice) { this.totalPrice = totalPrice; }
 
-    public LocalDateTime getOrderDate() { return orderDate; }
-    public void setOrderDate(LocalDateTime orderDate) { this.orderDate = orderDate; }
+    public Date getOrderDate() { return orderDate; }
+    public void setOrderDate(Date orderDate) { this.orderDate = orderDate; }
 
     public String getOrderStatus() { return orderStatus; }
     public void setOrderStatus(String orderStatus) { this.orderStatus = orderStatus; }

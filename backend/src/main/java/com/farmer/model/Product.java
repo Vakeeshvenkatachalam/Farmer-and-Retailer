@@ -22,6 +22,9 @@ public class Product {
 
     private Long farmerId;
 
+    @jakarta.persistence.Column(columnDefinition = "LONGTEXT", updatable = false)
+    private String imageUrl;
+
     // ===== GETTERS & SETTERS =====
 
     public Long getId() { return id; }
@@ -44,4 +47,7 @@ public class Product {
 
     public Long getFarmerId() { return farmerId; }
     public void setFarmerId(Long farmerId) { this.farmerId = farmerId; }
+
+    public String getImageUrl() { return imageUrl; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
 }

@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
     // data contains: token, role, userId, name, email
     localStorage.setItem("token", data.token);
     localStorage.setItem("userId", data.userId);
-    localStorage.setItem("role", data.role);
+    localStorage.setItem("role", data.role?.toUpperCase());
     
     const userData = {
       id: data.userId,

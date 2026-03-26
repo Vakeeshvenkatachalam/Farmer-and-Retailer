@@ -65,7 +65,11 @@ function Register() {
       }
 
     } catch (err) {
-      setError(err.response?.data || "Registration Failed");
+      if (err.response && err.response.data) {
+          setError(typeof err.response.data === 'string' ? err.response.data : "Registration Failed.");
+      } else {
+          setError("Server unreachable or network error.");
+      }
     } finally {
       setLoading(false);
     }

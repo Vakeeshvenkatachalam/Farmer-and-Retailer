@@ -3,7 +3,6 @@ package com.farmer.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,9 +14,9 @@ import com.farmer.model.User;
 import com.farmer.repository.UserRepository;
 import com.farmer.service.AuthService;
 
+// NOTE: CORS is handled globally in SecurityConfig — do NOT add @CrossOrigin here, it conflicts.
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = "http://localhost:5173")
 public class AuthController {
 
     @Autowired
@@ -30,8 +29,22 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody User user) {
         try {
+            System.out.println("[REGISTER] Incoming request: email=" + user.getEmail() + ", role=" + user.getRole());
+
+            if (user.getEmail() == null || user.getEmail().isBlank()) {
+                return ResponseEntity.badRequest().body("Email is required.");
+            }
+            if (user.getPassword() == null || user.getPassword().isBlank()) {
+                return ResponseEntity.badRequest().body("Password is required.");
+            }
+            if (user.getRole() == null || user.getRole().isBlank()) {
+                return ResponseEntity.badRequest().body("Role is required.");
+            }
+
+            // Return 409 Conflict so the frontend can show a clear 'email exists' message
             if (userRepository.findByEmail(user.getEmail()) != null) {
-                return ResponseEntity.badRequest().body("Email already exists!");
+                System.out.println("[REGISTER] Failed: Email already exists — " + user.getEmail());
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("This email is already registered. Please login instead.");
             }
 
             if ("FARMER".equalsIgnoreCase(user.getRole())) {
@@ -41,8 +54,10 @@ public class AuthController {
             }
 
             authService.register(user);
+            System.out.println("[REGISTER] Success for: " + user.getEmail());
             return ResponseEntity.ok("Registration submitted successfully!");
         } catch (Exception e) {
+            System.out.println("[REGISTER] Exception: " + e.getMessage());
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
@@ -51,7 +66,12 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody AuthRequest authRequest) {
         try {
-            AuthResponse response = authService.login(authRequest.getEmail(), authRequest.getPassword());
+            // FIX: pass role so AuthService can validate role mismatch
+            AuthResponse response = authService.login(
+                authRequest.getEmail(),
+                authRequest.getPassword(),
+                authRequest.getRole()
+            );
             return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());

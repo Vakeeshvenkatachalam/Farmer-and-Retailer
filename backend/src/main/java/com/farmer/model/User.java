@@ -26,6 +26,13 @@ public class User {
 
     private String approvalStatus; // PENDING / APPROVED / REJECTED
 
+    // Transient fields for Farmer registration
+    @jakarta.persistence.Transient
+    private String farmType;
+
+    @jakarta.persistence.Transient
+    private String farmerId;
+
     // ===== GETTERS & SETTERS =====
 
     public Long getId() { return id; }
@@ -57,4 +64,10 @@ public class User {
 
     public String getApprovalStatus() { return approvalStatus; }
     public void setApprovalStatus(String approvalStatus) { this.approvalStatus = approvalStatus; }
+
+    public String getFarmType() { return farmType; }
+    public void setFarmType(String farmType) { this.farmType = farmType; }
+
+    public String getFarmerId() { return farmerId; }
+    public void setFarmerId(String farmerId) { this.farmerId = farmerId; }
 }

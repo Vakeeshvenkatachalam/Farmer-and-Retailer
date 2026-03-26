@@ -31,7 +31,10 @@ public class RetailerService {
         retailer.setName(updatedRetailer.getName());
         retailer.setEmail(updatedRetailer.getEmail());
         retailer.setPhone(updatedRetailer.getPhone());
-        retailer.setLocation(updatedRetailer.getLocation());
+        // FIX: location was replaced by separate village/district/state fields
+        retailer.setVillage(updatedRetailer.getVillage());
+        retailer.setDistrict(updatedRetailer.getDistrict());
+        retailer.setState(updatedRetailer.getState());
 
         if (file != null && !file.isEmpty()) {
 

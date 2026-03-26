@@ -1,0 +1,211 @@
+.farmer-orders-container {
+  padding: 2rem;
+  animation: fadeIn 0.4s ease-out;
+}
+
+.orders-header {
+  margin-bottom: 2rem;
+}
+
+.orders-header h2 {
+  font-size: 2rem;
+  color: #ffffff;
+  margin: 0 0 0.5rem 0;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.orders-header p {
+  color: #a0a0b8;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.premium-orders-table-wrapper {
+  background: rgba(26, 26, 46, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+}
+
+.premium-orders-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.premium-orders-table th {
+  background: rgba(255, 255, 255, 0.02);
+  padding: 1.2rem 1.5rem;
+  font-weight: 600;
+  color: #8b8b9f;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 1px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.premium-orders-table td {
+  padding: 1.2rem 1.5rem;
+  color: #e0e0e0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  transition: background 0.2s ease;
+  font-size: 0.95rem;
+}
+
+.premium-orders-table tbody tr {
+  transition: all 0.2s ease;
+}
+
+.premium-orders-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.03);
+  transform: translateY(-1px);
+}
+
+.order-id {
+  font-family: monospace;
+  font-weight: 700;
+  color: #a0a0b8;
+  background: rgba(255,255,255,0.05);
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+}
+
+.primary-identity {
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.retailer-tag {
+  color: #00f2fe;
+  font-weight: 500;
+}
+
+.total-price {
+  font-weight: 700;
+  color: #2ecc71;
+}
+
+.status-badge {
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  display: inline-block;
+  text-align: center;
+}
+
+.status-badge.pending {
+  background: rgba(243, 156, 18, 0.15);
+  color: #f39c12;
+  border: 1px solid rgba(243, 156, 18, 0.3);
+}
+
+.status-badge.confirmed {
+  background: rgba(52, 152, 219, 0.15);
+  color: #3498db;
+  border: 1px solid rgba(52, 152, 219, 0.3);
+}
+
+.status-badge.shipped {
+  background: rgba(155, 89, 182, 0.15);
+  color: #9b59b6;
+  border: 1px solid rgba(155, 89, 182, 0.3);
+}
+
+.status-badge.delivered {
+  background: rgba(46, 204, 113, 0.15);
+  color: #2ecc71;
+  border: 1px solid rgba(46, 204, 113, 0.3);
+}
+
+.action-btn {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.action-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.action-btn.confirm-act {
+  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+  color: #000;
+  box-shadow: 0 4px 15px rgba(56, 239, 125, 0.2);
+}
+
+.action-btn.confirm-act:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(56, 239, 125, 0.4);
+}
+
+.action-btn.ship-act {
+  background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+  color: #fff;
+  box-shadow: 0 4px 15px rgba(52, 152, 219, 0.2);
+}
+
+.action-btn.ship-act:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+}
+
+.action-btn.deliver-act {
+  background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+  color: #fff;
+  box-shadow: 0 4px 15px rgba(155, 89, 182, 0.2);
+}
+
+.action-btn.deliver-act:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(155, 89, 182, 0.4);
+}
+
+.empty-orders-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: rgba(26, 26, 46, 0.4);
+  border-radius: 16px;
+  border: 1px dashed rgba(255, 255, 255, 0.05);
+}
+
+.empty-orders-state .icon {
+  font-size: 3.5rem;
+  display: block;
+  margin-bottom: 1rem;
+  opacity: 0.6;
+}
+
+.empty-orders-state p {
+  color: #8b8b9f;
+  font-size: 1.1rem;
+}
+
+.orders-loader {
+  text-align: center;
+  color: #00f2fe;
+  padding: 3rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

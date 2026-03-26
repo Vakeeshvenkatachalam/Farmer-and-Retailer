@@ -7,7 +7,7 @@ function ProtectedRoute({ children, role }) {
     return <Navigate to="/login" />;
   }
 
-  if (userRole !== role) {
+  if (userRole.toUpperCase() !== role.toUpperCase()) {
     return <Navigate to="/" />;
   }
 

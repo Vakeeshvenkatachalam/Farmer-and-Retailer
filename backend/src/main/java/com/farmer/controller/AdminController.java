@@ -63,21 +63,16 @@ public class AdminController {
 
         Map<String, Object> stats = new HashMap<>();
 
-        long totalFarmers = userRepository
-                .findByRoleAndApprovalStatus("FARMER", "APPROVED").size()
-                + userRepository
-                .findByRoleAndApprovalStatus("FARMER", "PENDING").size();
+        // FIX: was making 5 separate DB calls. Now caches results in local lists.
+        List<User> approvedFarmersList = userRepository.findByRoleAndApprovalStatus("FARMER", "APPROVED");
+        List<User> pendingFarmersList  = userRepository.findByRoleAndApprovalStatus("FARMER", "PENDING");
+        List<User> approvedRetailersList = userRepository.findByRoleAndApprovalStatus("RETAILER", "APPROVED");
 
-        long pendingFarmers = userRepository
-                .findByRoleAndApprovalStatus("FARMER", "PENDING").size();
-
-        long approvedFarmers = userRepository
-                .findByRoleAndApprovalStatus("FARMER", "APPROVED").size();
-
-        long totalRetailers = userRepository
-                .findByRoleAndApprovalStatus("RETAILER", "APPROVED").size();
-
-        long totalOrders = orderRepository.count();
+        long approvedFarmers = approvedFarmersList.size();
+        long pendingFarmers  = pendingFarmersList.size();
+        long totalFarmers    = approvedFarmers + pendingFarmers;
+        long totalRetailers  = approvedRetailersList.size();
+        long totalOrders     = orderRepository.count();
 
         stats.put("totalFarmers", totalFarmers);
         stats.put("pendingFarmers", pendingFarmers);

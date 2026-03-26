@@ -1,0 +1,248 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+.my-orders-container {
+  font-family: 'Inter', sans-serif;
+  padding: 8px;
+  color: #fff;
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+/* ─── Header ──────────────────────────────────────────────── */
+.orders-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.orders-title-block h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #00e5ff, #7c4dff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0 0 4px;
+}
+
+.orders-title-block p {
+  color: #94a3b8;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.orders-summary {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.summary-chip {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: #cbd5e1;
+}
+.summary-chip.paid   { background: rgba(16,185,129,0.15); border-color: rgba(16,185,129,0.35); color: #34d399; }
+.summary-chip.pending{ background: rgba(245,158,11,0.15); border-color: rgba(245,158,11,0.35); color: #fbbf24; }
+
+/* ─── Loader ───────────────────────────────────────────────── */
+.orders-loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  color: #94a3b8;
+  padding: 60px 0;
+  font-size: 0.9rem;
+}
+
+.loader-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(124,77,255,0.2);
+  border-top-color: #7c4dff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ─── Empty State ──────────────────────────────────────────── */
+.empty-orders-state {
+  text-align: center;
+  padding: 80px 20px;
+  background: rgba(255,255,255,0.03);
+  border: 1px dashed rgba(255,255,255,0.1);
+  border-radius: 16px;
+}
+
+.empty-icon { font-size: 3.5rem; display: block; margin-bottom: 16px; }
+
+.empty-orders-state h3 {
+  font-size: 1.3rem;
+  color: #e2e8f0;
+  margin: 0 0 8px;
+}
+
+.empty-orders-state p {
+  color: #64748b;
+  margin-bottom: 24px;
+}
+
+.browse-btn {
+  padding: 10px 28px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #7c4dff, #00e5ff);
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: opacity 0.2s, transform 0.15s;
+}
+.browse-btn:hover { opacity: 0.88; transform: translateY(-2px); }
+
+/* ─── Table ────────────────────────────────────────────────── */
+.orders-table-wrapper {
+  overflow-x: auto;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  backdrop-filter: blur(12px);
+}
+
+.orders-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 820px;
+}
+
+.orders-table thead th {
+  padding: 14px 16px;
+  text-align: left;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #64748b;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+
+.order-row {
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  animation: rowIn 0.4s ease both;
+  transition: background 0.2s;
+}
+
+.order-row:last-child { border-bottom: none; }
+.order-row:hover { background: rgba(255,255,255,0.04); }
+
+@keyframes rowIn {
+  from { opacity: 0; transform: translateX(-10px); }
+  to   { opacity: 1; transform: translateX(0);     }
+}
+
+.orders-table tbody td {
+  padding: 14px 16px;
+  vertical-align: middle;
+}
+
+/* ─── Cell Content ─────────────────────────────────────────── */
+.order-ref {
+  font-family: 'Courier New', monospace;
+  font-weight: 600;
+  color: #7c4dff;
+  font-size: 0.9rem;
+}
+
+.product-name {
+  font-weight: 600;
+  color: #e2e8f0;
+}
+
+.farmer-name {
+  color: #94a3b8;
+  font-size: 0.85rem;
+}
+
+.qty-badge {
+  font-weight: 600;
+  color: #e2e8f0;
+}
+.unit { font-size: 0.75rem; color: #64748b; }
+
+.price-tag {
+  font-weight: 700;
+  color: #34d399;
+}
+
+/* ─── Status Badges ────────────────────────────────────────── */
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.status-pending   { background: rgba(245,158,11,0.15); color: #fbbf24; border: 1px solid rgba(245,158,11,0.3); }
+.status-confirmed { background: rgba(59,130,246,0.15);  color: #60a5fa; border: 1px solid rgba(59,130,246,0.3); }
+.status-shipped   { background: rgba(139,92,246,0.15);  color: #a78bfa; border: 1px solid rgba(139,92,246,0.3); }
+.status-delivered { background: rgba(16,185,129,0.15);  color: #34d399; border: 1px solid rgba(16,185,129,0.3); }
+.status-cancelled { background: rgba(239,68,68,0.15);   color: #f87171; border: 1px solid rgba(239,68,68,0.3);  }
+
+/* ─── Payment Badge ────────────────────────────────────────── */
+.payment-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+.pay-paid    { background: rgba(16,185,129,0.15); color: #34d399; border: 1px solid rgba(16,185,129,0.3); }
+.pay-pending { background: rgba(245,158,11,0.15); color: #fbbf24; border: 1px solid rgba(245,158,11,0.3); }
+
+/* ─── Action Buttons ───────────────────────────────────────── */
+.action-group {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.15s, opacity 0.2s;
+}
+.action-btn:hover { transform: translateY(-2px); opacity: 0.88; }
+
+.pay-btn {
+  background: linear-gradient(135deg, #7c4dff, #5b21b6);
+  color: #fff;
+}
+
+.feedback-btn {
+  background: rgba(245,158,11,0.2);
+  color: #fbbf24;
+  border: 1px solid rgba(245,158,11,0.35);
+}
+
+.no-action { color: #334155; font-size: 0.9rem; }

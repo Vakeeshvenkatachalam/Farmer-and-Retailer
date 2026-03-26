@@ -23,8 +23,16 @@ public class JwtUtil {
     private long jwtExpiration;
 
     private SecretKey getSigningKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
-        return Keys.hmacShaKeyFor(keyBytes);
+        // FIX: Decoders.BASE64.decode() fails silently on non-Base64 strings.
+        // The default secret "MySecretKey..." is plain text, not Base64.
+        // Use UTF-8 bytes directly for plain strings; use Base64 only for proper Base64-encoded secrets.
+        try {
+            byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+            return Keys.hmacShaKeyFor(keyBytes);
+        } catch (Exception e) {
+            // Fallback: treat the secret as a plain UTF-8 string
+            return Keys.hmacShaKeyFor(secretKey.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+        }
     }
 
     // Generate JWT token

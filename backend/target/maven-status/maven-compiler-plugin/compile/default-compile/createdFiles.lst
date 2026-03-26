@@ -3,6 +3,7 @@ com\farmer\FarmerPlatformApplication.class
 com\farmer\repository\AdminRepository.class
 com\farmer\repository\UserRepository.class
 com\farmer\service\AuthService.class
+com\farmer\controller\FeedbackController.class
 com\farmer\model\Order.class
 com\farmer\config\SecurityConfig.class
 com\farmer\controller\FarmerController.class
@@ -16,8 +17,11 @@ com\farmer\model\Retailer.class
 com\farmer\dto\AuthResponse.class
 com\farmer\config\CorsConfig.class
 com\farmer\controller\PaymentController$PaymentVerificationRequest.class
+com\farmer\model\Feedback.class
 com\farmer\model\Admin.class
+com\farmer\service\FeedbackService.class
 com\farmer\dto\AuthRequest.class
+com\farmer\repository\FeedbackRepository.class
 com\farmer\controller\PaymentController.class
 com\farmer\model\Payment.class
 com\farmer\controller\OrderController.class

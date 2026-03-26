@@ -17,12 +17,15 @@ import Analytics from "./pages/admin/Analytics";
 /* Farmer Pages */
 import FarmerDashboard from "./pages/farmer/FarmerDashboard";
 import AddProduct from "./pages/farmer/AddProduct";
+import FarmerMyProducts from "./pages/farmer/FarmerMyProducts";
 import FarmerOrders from "./pages/farmer/FarmerOrders";
 
 /* Retailer Pages */
 import BrowseProducts from "./pages/retailer/BrowseProducts";
 import MyOrders from "./pages/retailer/MyOrders";
-
+import LeaveFeedback from "./pages/retailer/LeaveFeedback";
+import RetailerNotifications from "./pages/retailer/RetailerNotifications";
+import PaymentPage from "./pages/PaymentPage";
 
 /* Components */
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -46,8 +49,6 @@ function App() {
         }
       />
       <Route path="/admin-login" element={<AdminLogin />} />
-      <Route path="/farmer/profile" element={<FarmerProfile />} />
-      <Route path="/retailer/profile" element={<RetailerProfile />} />
       <Route path="/admin/profile" element={<AdminProfile />} />
       <Route path="/retailer-dashboard" element={<RetailerDashboard />} />
       <Route
@@ -78,6 +79,22 @@ function App() {
       />
       <Route
         path="/farmer/products"
+        element={
+          <ProtectedRoute role="FARMER">
+            <AddProduct />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/farmer/my-products"
+        element={
+          <ProtectedRoute role="FARMER">
+            <FarmerMyProducts />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/farmer/add-product"
         element={
           <ProtectedRoute role="FARMER">
             <AddProduct />
@@ -131,6 +148,38 @@ function App() {
         element={
           <ProtectedRoute role="RETAILER">
             <RetailerProfile />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/retailer/payment/:orderId"
+        element={
+          <ProtectedRoute role="RETAILER">
+            <PaymentPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/retailer/notifications"
+        element={
+          <ProtectedRoute role="RETAILER">
+            <RetailerNotifications />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/farmer/notifications"
+        element={
+          <ProtectedRoute role="FARMER">
+            <RetailerNotifications />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/retailer/feedback/:productId"
+        element={
+          <ProtectedRoute role="RETAILER">
+            <LeaveFeedback />
           </ProtectedRoute>
         }
       />

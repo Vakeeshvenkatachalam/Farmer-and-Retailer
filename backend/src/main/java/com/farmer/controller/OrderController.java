@@ -4,11 +4,12 @@ import com.farmer.model.Order;
 import com.farmer.model.Product;
 import com.farmer.repository.OrderRepository;
 import com.farmer.repository.ProductRepository;
+import com.farmer.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,9 @@ public class OrderController {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     // ✅ Retailer Place Order
     @PostMapping("/place")
@@ -42,7 +46,7 @@ public class OrderController {
             productRepository.save(product);
 
             order.setTotalPrice(product.getPrice() * order.getQuantity());
-            order.setOrderDate(LocalDateTime.now());
+            order.setOrderDate(new Date());
             order.setOrderStatus("PENDING");
             order.setPaymentStatus("PENDING");
 
@@ -60,16 +64,55 @@ public class OrderController {
 
     // ✅ Retailer View Own Orders
     @GetMapping("/retailer/{retailerId}")
-    public List<Order> getRetailerOrders(@PathVariable Long retailerId) {
-        return orderRepository.findByRetailerId(retailerId);
+    public ResponseEntity<?> getRetailerOrders(@PathVariable Long retailerId) {
+        List<Order> orders = orderRepository.findByRetailerId(retailerId);
+        List<Map<String, Object>> responseList = new java.util.ArrayList<>();
+        
+        for (Order order : orders) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("id", order.getId());
+            map.put("quantity", order.getQuantity());
+            map.put("totalPrice", order.getTotalPrice());
+            map.put("orderStatus", order.getOrderStatus());
+            map.put("paymentStatus", order.getPaymentStatus()); // Retailers need payment status
+            
+            Product product = productRepository.findById(order.getProductId()).orElse(null);
+            map.put("productId", order.getProductId());
+            map.put("productName", product != null ? product.getProductName() : "Unknown Product");
+            
+            com.farmer.model.User farmerUser = (product != null && product.getFarmerId() != null)
+                    ? userRepository.findById(product.getFarmerId()).orElse(null) : null;
+            map.put("farmerName", farmerUser != null ? farmerUser.getName() : "Unknown Farmer");
+            
+            responseList.add(map);
+        }
+        return ResponseEntity.ok(responseList);
     }
 
     // ===== ORDER STATUS WORKFLOW =====
 
     // Farmer: View all orders for their products
     @GetMapping("/farmer/{farmerId}")
-    public List<Order> getFarmerOrders(@PathVariable Long farmerId) {
-        return orderRepository.findByFarmerId(farmerId);
+    public ResponseEntity<?> getFarmerOrders(@PathVariable Long farmerId) {
+        List<Order> orders = orderRepository.findByFarmerId(farmerId);
+        List<Map<String, Object>> responseList = new java.util.ArrayList<>();
+        
+        for (Order order : orders) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("id", order.getId());
+            map.put("quantity", order.getQuantity());
+            map.put("totalPrice", order.getTotalPrice());
+            map.put("orderStatus", order.getOrderStatus());
+            
+            Product product = productRepository.findById(order.getProductId()).orElse(null);
+            map.put("productName", product != null ? product.getProductName() : "Unknown Product");
+            
+            com.farmer.model.User retailerUser = userRepository.findById(order.getRetailerId()).orElse(null);
+            map.put("retailerName", retailerUser != null ? retailerUser.getName() : "Unknown Retailer");
+            
+            responseList.add(map);
+        }
+        return ResponseEntity.ok(responseList);
     }
 
     // Farmer: Get pending orders (awaiting confirmation)
