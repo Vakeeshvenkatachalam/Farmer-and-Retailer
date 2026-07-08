@@ -51,8 +51,7 @@ public class PaymentController {
             boolean isVerified = paymentService.verifyPaymentSignature(
                     request.getRazorpayOrderId(),
                     request.getRazorpayPaymentId(),
-                    request.getRazorpaySignature()
-            );
+                    request.getRazorpaySignature());
 
             Map<String, Object> response = new HashMap<>();
             response.put("verified", isVerified);
@@ -114,13 +113,28 @@ public class PaymentController {
         private String razorpayPaymentId;
         private String razorpaySignature;
 
-        public String getRazorpayOrderId() { return razorpayOrderId; }
-        public void setRazorpayOrderId(String razorpayOrderId) { this.razorpayOrderId = razorpayOrderId; }
+        public String getRazorpayOrderId() {
+            return razorpayOrderId;
+        }
 
-        public String getRazorpayPaymentId() { return razorpayPaymentId; }
-        public void setRazorpayPaymentId(String razorpayPaymentId) { this.razorpayPaymentId = razorpayPaymentId; }
+        public void setRazorpayOrderId(String razorpayOrderId) {
+            this.razorpayOrderId = razorpayOrderId;
+        }
 
-        public String getRazorpaySignature() { return razorpaySignature; }
-        public void setRazorpaySignature(String razorpaySignature) { this.razorpaySignature = razorpaySignature; }
+        public String getRazorpayPaymentId() {
+            return razorpayPaymentId;
+        }
+
+        public void setRazorpayPaymentId(String razorpayPaymentId) {
+            this.razorpayPaymentId = razorpayPaymentId;
+        }
+
+        public String getRazorpaySignature() {
+            return razorpaySignature;
+        }
+
+        public void setRazorpaySignature(String razorpaySignature) {
+            this.razorpaySignature = razorpaySignature;
+        }
     }
 }

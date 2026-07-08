@@ -10,8 +10,10 @@ import org.springframework.stereotype.Service;
 
 import com.farmer.model.Order;
 import com.farmer.model.Payment;
+import com.farmer.model.Product;
 import com.farmer.repository.OrderRepository;
 import com.farmer.repository.PaymentRepository;
+import com.farmer.repository.ProductRepository;
 
 @Service
 public class PaymentService {
@@ -21,6 +23,12 @@ public class PaymentService {
 
     @Autowired
     private OrderRepository orderRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
+
+    @Autowired
+    private NotificationService notificationService;
 
     @Value("${razorpay.key.id:YOUR_RAZORPAY_KEY_ID}")
     private String razorpayKeyId;
@@ -102,6 +110,24 @@ public class PaymentService {
                     order.setPaymentStatus("PAID");
                     order.setOrderStatus("CONFIRMED");
                     orderRepository.save(order);
+
+                    Product product = productRepository.findById(order.getProductId()).orElse(null);
+
+                    notificationService.createNotification(
+                        order.getRetailerId(),
+                        "RETAILER",
+                        "Payment Successful",
+                        "Your payment for order #" + order.getId() + " of ₹" + order.getTotalPrice() + " was successful.",
+                        "PAYMENT"
+                    );
+
+                    notificationService.createNotification(
+                        product != null ? product.getFarmerId() : null,
+                        "FARMER",
+                        "Payment Received",
+                        "Payment of ₹" + order.getTotalPrice() + " for order #" + order.getId() + " has been received.",
+                        "PAYMENT"
+                    );
                 }
                 
                 return true;

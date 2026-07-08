@@ -1,90 +1,19 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Inter', sans-serif;
+@layer base {
+  body {
+    @apply bg-base-cream text-text-dark antialiased;
+  }
+  ::selection {
+    @apply bg-primary-light text-text-dark;
+  }
 }
 
-body {
-  background-color: #F8FAFC;
-  color: #1F2937;
-}
-
-.layout {
-  display: flex;
-}
-
-.sidebar {
-  width: 240px;
-  background: #FFFFFF;
-  border-right: 1px solid #E5E7EB;
-  min-height: 100vh;
-  padding: 20px;
-}
-
-.sidebar h2 {
-  color: #16A34A;
-  margin-bottom: 30px;
-}
-
-.sidebar a {
-  display: block;
-  padding: 10px;
-  margin-bottom: 10px;
-  text-decoration: none;
-  color: #374151;
-  border-radius: 10px;
-}
-
-.sidebar a:hover {
-  background: #DCFCE7;
-}
-
-.content {
-  flex: 1;
-  padding: 30px;
-}
-
-.card {
-  background: #FFFFFF;
-  border: 1px solid #E5E7EB;
-  border-radius: 12px;
-  padding: 20px;
-}
-
-.stat-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 20px;
-  margin-bottom: 30px;
-}
-
-.table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.table th, .table td {
-  padding: 12px;
-  border-bottom: 1px solid #E5E7EB;
-  text-align: left;
-}
-
-button {
-  background: #16A34A;
-  color: white;
-  padding: 8px 14px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-input, select {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #E5E7EB;
-  border-radius: 8px;
-  margin-bottom: 15px;
+/* Custom utilities if we need to supplement Tailwind */
+@layer utilities {
+  .glass-card {
+    @apply bg-white/80 backdrop-blur-md border border-white shadow-lg rounded-xl;
+  }
 }

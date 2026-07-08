@@ -13,6 +13,10 @@ import Register from "./pages/auth/Register";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import UserApprovals from "./pages/admin/UserApprovals";
 import Analytics from "./pages/admin/Analytics";
+import AdminFarmers from "./pages/admin/AdminFarmers";
+import AdminRetailers from "./pages/admin/AdminRetailers";
+import AdminProducts from "./pages/admin/AdminProducts";
+import AdminOrders from "./pages/admin/AdminOrders";
 
 /* Farmer Pages */
 import FarmerDashboard from "./pages/farmer/FarmerDashboard";
@@ -24,7 +28,7 @@ import FarmerOrders from "./pages/farmer/FarmerOrders";
 import BrowseProducts from "./pages/retailer/BrowseProducts";
 import MyOrders from "./pages/retailer/MyOrders";
 import LeaveFeedback from "./pages/retailer/LeaveFeedback";
-import RetailerNotifications from "./pages/retailer/RetailerNotifications";
+import Notifications from "./pages/shared/Notifications";
 import PaymentPage from "./pages/PaymentPage";
 
 /* Components */
@@ -64,6 +68,38 @@ function App() {
         element={
           <ProtectedRoute role="ADMIN">
             <Analytics />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/farmers"
+        element={
+          <ProtectedRoute role="ADMIN">
+            <AdminFarmers />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/retailers"
+        element={
+          <ProtectedRoute role="ADMIN">
+            <AdminRetailers />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/products"
+        element={
+          <ProtectedRoute role="ADMIN">
+            <AdminProducts />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/orders"
+        element={
+          <ProtectedRoute role="ADMIN">
+            <AdminOrders />
           </ProtectedRoute>
         }
       />
@@ -163,7 +199,7 @@ function App() {
         path="/retailer/notifications"
         element={
           <ProtectedRoute role="RETAILER">
-            <RetailerNotifications />
+            <Notifications />
           </ProtectedRoute>
         }
       />
@@ -171,7 +207,15 @@ function App() {
         path="/farmer/notifications"
         element={
           <ProtectedRoute role="FARMER">
-            <RetailerNotifications />
+            <Notifications />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/notifications"
+        element={
+          <ProtectedRoute role="ADMIN">
+            <Notifications />
           </ProtectedRoute>
         }
       />

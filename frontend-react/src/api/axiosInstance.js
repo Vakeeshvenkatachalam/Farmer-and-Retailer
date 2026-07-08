@@ -12,6 +12,7 @@ const axiosInstance = axios.create({
 // Add token to every request
 axiosInstance.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
+  console.log(`[Axios Request] ${config.method.toUpperCase()} ${config.url} | Token present: ${!!token}`);
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -25,6 +26,7 @@ axiosInstance.interceptors.response.use(
   },
   (error) => {
     if (error.response && error.response.status === 401) {
+      console.error(`[Axios Error] 401 Unauthorized on ${error.config.method.toUpperCase()} ${error.config.url}`, error.response.data);
       // Token is strictly invalid, systematically ejecting all session orphans
       console.warn("401 Unauthorized: Ejecting session artifacts...");
       localStorage.removeItem('token');

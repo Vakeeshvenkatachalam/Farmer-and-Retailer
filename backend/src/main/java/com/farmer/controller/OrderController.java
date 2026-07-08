@@ -5,6 +5,7 @@ import com.farmer.model.Product;
 import com.farmer.repository.OrderRepository;
 import com.farmer.repository.ProductRepository;
 import com.farmer.repository.UserRepository;
+import com.farmer.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +29,9 @@ public class OrderController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private NotificationService notificationService;
+
     // ✅ Retailer Place Order
     @PostMapping("/place")
     public ResponseEntity<?> placeOrder(@RequestBody Order order) {
@@ -43,7 +47,7 @@ public class OrderController {
             }
 
             product.setQuantity(product.getQuantity() - order.getQuantity());
-            productRepository.save(product);
+            Product savedProduct = productRepository.save(product);
 
             order.setTotalPrice(product.getPrice() * order.getQuantity());
             order.setOrderDate(new Date());
@@ -51,6 +55,41 @@ public class OrderController {
             order.setPaymentStatus("PENDING");
 
             Order savedOrder = orderRepository.save(order);
+
+            // Send notification to Farmer & Retailer
+            notificationService.createNotification(
+                savedProduct.getFarmerId(),
+                "FARMER",
+                "New Order Received",
+                "You have received a new order #" + savedOrder.getId() + " for " + savedOrder.getQuantity() + " kg of " + savedProduct.getProductName() + ".",
+                "ORDER"
+            );
+
+            notificationService.createNotification(
+                savedOrder.getRetailerId(),
+                "RETAILER",
+                "Order Placed",
+                "Your order #" + savedOrder.getId() + " for " + savedOrder.getQuantity() + " kg of " + savedProduct.getProductName() + " was placed successfully. Awaiting payment/confirmation.",
+                "ORDER"
+            );
+
+            // Low Stock alerts
+            if (savedProduct.getQuantity() <= 5) {
+                notificationService.createNotification(
+                    savedProduct.getFarmerId(),
+                    "FARMER",
+                    "Low Stock Alert",
+                    "Your listing \"" + savedProduct.getProductName() + "\" has only " + savedProduct.getQuantity() + " kg remaining.",
+                    "LOW_STOCK"
+                );
+                notificationService.createNotification(
+                    null,
+                    "ADMIN",
+                    "Low Stock Alert",
+                    "Product \"" + savedProduct.getProductName() + "\" (Farmer ID: " + savedProduct.getFarmerId() + ") is running low (" + savedProduct.getQuantity() + " kg remaining).",
+                    "LOW_STOCK"
+                );
+            }
 
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Order placed successfully");
@@ -103,6 +142,7 @@ public class OrderController {
             map.put("quantity", order.getQuantity());
             map.put("totalPrice", order.getTotalPrice());
             map.put("orderStatus", order.getOrderStatus());
+            map.put("paymentStatus", order.getPaymentStatus()); // Fix for revenue calculation
             
             Product product = productRepository.findById(order.getProductId()).orElse(null);
             map.put("productName", product != null ? product.getProductName() : "Unknown Product");
@@ -130,6 +170,16 @@ public class OrderController {
         order.setOrderStatus("CONFIRMED");
         Order updated = orderRepository.save(order);
 
+        Product product = productRepository.findById(updated.getProductId()).orElse(null);
+        String pName = (product != null) ? product.getProductName() : "your order";
+        notificationService.createNotification(
+            updated.getRetailerId(),
+            "RETAILER",
+            "Order Confirmed",
+            "Your order #" + updated.getId() + " for \"" + pName + "\" has been confirmed by the farmer.",
+            "ORDER"
+        );
+
         Map<String, Object> response = new HashMap<>();
         response.put("message", "Order confirmed successfully");
         response.put("order", updated);
@@ -149,6 +199,16 @@ public class OrderController {
         order.setOrderStatus("SHIPPED");
         Order updated = orderRepository.save(order);
 
+        Product product = productRepository.findById(updated.getProductId()).orElse(null);
+        String pName = (product != null) ? product.getProductName() : "your order";
+        notificationService.createNotification(
+            updated.getRetailerId(),
+            "RETAILER",
+            "Order Shipped",
+            "Your order #" + updated.getId() + " for \"" + pName + "\" has been shipped.",
+            "ORDER"
+        );
+
         Map<String, Object> response = new HashMap<>();
         response.put("message", "Order shipped successfully");
         response.put("order", updated);
@@ -167,6 +227,16 @@ public class OrderController {
 
         order.setOrderStatus("DELIVERED");
         Order updated = orderRepository.save(order);
+
+        Product product = productRepository.findById(updated.getProductId()).orElse(null);
+        String pName = (product != null) ? product.getProductName() : "your order";
+        notificationService.createNotification(
+            updated.getRetailerId(),
+            "RETAILER",
+            "Order Delivered",
+            "Your order #" + updated.getId() + " for \"" + pName + "\" has been delivered. Please leave feedback/review.",
+            "ORDER"
+        );
 
         Map<String, Object> response = new HashMap<>();
         response.put("message", "Order delivered successfully");
@@ -193,6 +263,22 @@ public class OrderController {
 
         order.setOrderStatus("CANCELLED");
         Order updated = orderRepository.save(order);
+
+        String pName = (product != null) ? product.getProductName() : "Product";
+        notificationService.createNotification(
+            updated.getRetailerId(),
+            "RETAILER",
+            "Order Cancelled",
+            "Order #" + updated.getId() + " for \"" + pName + "\" has been cancelled.",
+            "ORDER"
+        );
+        notificationService.createNotification(
+            product != null ? product.getFarmerId() : null,
+            "FARMER",
+            "Order Cancelled",
+            "Order #" + updated.getId() + " for \"" + pName + "\" has been cancelled.",
+            "ORDER"
+        );
 
         Map<String, Object> response = new HashMap<>();
         response.put("message", "Order cancelled successfully");

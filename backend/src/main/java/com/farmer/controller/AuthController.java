@@ -13,6 +13,7 @@ import com.farmer.dto.AuthResponse;
 import com.farmer.model.User;
 import com.farmer.repository.UserRepository;
 import com.farmer.service.AuthService;
+import com.farmer.service.NotificationService;
 
 // NOTE: CORS is handled globally in SecurityConfig — do NOT add @CrossOrigin here, it conflicts.
 @RestController
@@ -24,6 +25,9 @@ public class AuthController {
 
     @Autowired
     private AuthService authService;
+
+    @Autowired
+    private NotificationService notificationService;
 
     // REGISTER
     @PostMapping("/register")
@@ -53,7 +57,15 @@ public class AuthController {
                 user.setApprovalStatus("APPROVED");
             }
 
-            authService.register(user);
+            User registeredUser = authService.register(user);
+            
+            if ("FARMER".equalsIgnoreCase(registeredUser.getRole())) {
+                notificationService.createNotification(null, "ADMIN", "New Farmer Registration", "Farmer " + registeredUser.getName() + " has registered and is pending approval.", "REGISTRATION");
+            } else if ("RETAILER".equalsIgnoreCase(registeredUser.getRole())) {
+                notificationService.createNotification(null, "ADMIN", "New Retailer Registered", "Retailer " + registeredUser.getName() + " has registered on the platform.", "REGISTRATION");
+                notificationService.createNotification(registeredUser.getId(), "RETAILER", "Welcome to FarmConnect!", "Thank you for registering. You can now browse products and place orders.", "WELCOME");
+            }
+
             System.out.println("[REGISTER] Success for: " + user.getEmail());
             return ResponseEntity.ok("Registration submitted successfully!");
         } catch (Exception e) {

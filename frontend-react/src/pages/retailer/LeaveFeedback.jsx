@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import axiosInstance from "../../api/axiosInstance";
 import { useAuth } from "../../context/AuthContext";
 import DashboardLayout from "../../components/layout/DashboardLayout";
+import { FiStar, FiArrowLeft, FiCheckCircle, FiAlertCircle, FiBox } from "react-icons/fi";
 
 function LeaveFeedback() {
   const { productId } = useParams();
@@ -48,140 +49,112 @@ function LeaveFeedback() {
   const labels = ["", "Terrible", "Poor", "Average", "Good", "Excellent"];
 
   return (
-    <DashboardLayout>
-      <div style={styles.page}>
+    <DashboardLayout title="Leave Feedback">
+      <div className="max-w-2xl mx-auto animate-in fade-in slide-in-from-bottom-4">
         {/* Product preview */}
         {product && (
-          <div style={styles.productPreview}>
-            {product.imageUrl && <img src={product.imageUrl} alt={product.productName} style={styles.previewImg} />}
+          <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-4 mb-6">
+            {product.imageUrl ? (
+              <img src={product.imageUrl} alt={product.productName} className="w-16 h-16 rounded-xl object-cover bg-gray-50" />
+            ) : (
+              <div className="w-16 h-16 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 text-2xl">
+                <FiBox />
+              </div>
+            )}
             <div>
-              <p style={styles.previewLabel}>Reviewing</p>
-              <h3 style={styles.previewName}>{product.productName}</h3>
-              <p style={styles.previewMeta}>{product.category} • ₹{product.price}/unit</p>
+              <p className="text-xs font-bold text-text-medium uppercase tracking-wider mb-1">Reviewing</p>
+              <h3 className="text-lg font-bold text-text-dark leading-tight">{product.productName}</h3>
+              <p className="text-text-medium text-sm">{product.category} • ₹{product.price}/kg</p>
             </div>
           </div>
         )}
 
-        <div style={styles.card}>
-          <h2 style={styles.title}>Leave a Review</h2>
-          <p style={styles.subtitle}>Share your experience with this product.</p>
+        <div className="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-gray-100">
+          <div className="mb-6">
+            <h2 className="text-2xl font-bold text-text-dark mb-1">Leave a Review</h2>
+            <p className="text-text-medium">Share your experience with this product.</p>
+          </div>
 
           <form onSubmit={handleSubmit}>
             {/* Star Rating */}
-            <div style={styles.starSection}>
-              <p style={styles.fieldLabel}>Your Rating</p>
-              <div style={styles.starsRow}>
+            <div className="mb-8">
+              <label className="block text-sm font-bold text-text-dark mb-3">Your Rating</label>
+              <div className="flex gap-2">
                 {[1, 2, 3, 4, 5].map(star => (
                   <button
                     key={star}
                     type="button"
-                    style={styles.starBtn}
+                    className="focus:outline-none transition-transform"
                     onClick={() => setRating(star)}
                     onMouseEnter={() => setHovered(star)}
                     onMouseLeave={() => setHovered(0)}
                   >
-                    <span style={{
-                      fontSize: "2.2rem",
-                      color: star <= (hovered || rating) ? "#f59e0b" : "rgba(255,255,255,0.15)",
-                      transition: "color 0.15s, transform 0.15s",
-                      display: "inline-block",
-                      transform: star <= (hovered || rating) ? "scale(1.15)" : "scale(1)",
-                    }}>★</span>
+                    <FiStar 
+                      className={`text-4xl transition-all duration-200 ${
+                        star <= (hovered || rating) 
+                          ? "fill-orange-400 text-orange-400 scale-110" 
+                          : "text-gray-200"
+                      }`} 
+                    />
                   </button>
                 ))}
               </div>
-              {(hovered || rating) > 0 && (
-                <p style={styles.ratingLabel}>{labels[hovered || rating]}</p>
-              )}
+              <div className="mt-2 h-6">
+                {(hovered || rating) > 0 && (
+                  <p className="text-orange-500 font-bold text-sm animate-in fade-in">{labels[hovered || rating]}</p>
+                )}
+              </div>
             </div>
 
             {/* Comment */}
-            <div style={styles.fieldGroup}>
-              <p style={styles.fieldLabel}>Your Review</p>
+            <div className="mb-6">
+              <label className="block text-sm font-bold text-text-dark mb-2">Your Review</label>
               <textarea
                 value={comment}
                 onChange={e => setComment(e.target.value)}
                 placeholder="Describe the quality, freshness, packaging..."
                 rows={4}
-                style={styles.textarea}
+                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors text-text-dark resize-y"
               />
             </div>
 
             {/* Status */}
             {status && (
-              <div style={{
-                ...styles.statusBox,
-                background: status.type === "success" ? "rgba(16,185,129,0.1)" : "rgba(239,68,68,0.1)",
-                border: `1px solid ${status.type === "success" ? "rgba(16,185,129,0.3)" : "rgba(239,68,68,0.3)"}`,
-                color: status.type === "success" ? "#34d399" : "#f87171",
-              }}>
-                {status.type === "success" ? "✓" : "⚠"} {status.msg}
+              <div className={`p-4 rounded-xl mb-6 flex items-start gap-3 text-sm font-bold animate-in fade-in ${
+                status.type === "success" 
+                  ? "bg-green-50 text-green-700 border border-green-100" 
+                  : "bg-red-50 text-red-700 border border-red-100"
+              }`}>
+                {status.type === "success" ? <FiCheckCircle className="text-lg shrink-0 mt-0.5" /> : <FiAlertCircle className="text-lg shrink-0 mt-0.5" />}
+                {status.msg}
               </div>
             )}
 
-            <div style={styles.actions}>
-              <button type="button" style={styles.cancelBtn} onClick={() => navigate(-1)}>
-                ← Back
+            <div className="flex gap-3 justify-end pt-4 border-t border-gray-100">
+              <button 
+                type="button" 
+                className="px-6 py-2.5 rounded-xl font-bold text-text-medium hover:bg-gray-100 transition-colors flex items-center gap-2" 
+                onClick={() => navigate(-1)}
+              >
+                <FiArrowLeft /> Back
               </button>
-              <button type="submit" style={styles.submitBtn} disabled={loading}>
-                {loading ? "Submitting..." : "Submit Review ⭐"}
+              <button 
+                type="submit" 
+                disabled={loading}
+                className="px-6 py-2.5 rounded-xl font-bold bg-primary text-white hover:bg-green-600 transition-colors shadow-md shadow-primary/30 flex items-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+              >
+                {loading ? (
+                  <><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div> Submitting...</>
+                ) : (
+                  <><FiStar className="fill-white" /> Submit Review</>
+                )}
               </button>
             </div>
           </form>
         </div>
       </div>
-      <style>{`@keyframes fadeUp { from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)} }`}</style>
     </DashboardLayout>
   );
 }
-
-const styles = {
-  page: { padding: "8px", fontFamily: "'Inter', sans-serif", maxWidth: 560, animation: "fadeUp 0.5s ease" },
-  productPreview: {
-    display: "flex", alignItems: "center", gap: 14,
-    background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)",
-    borderRadius: 14, padding: "14px 18px", marginBottom: 20,
-  },
-  previewImg: { width: 60, height: 60, borderRadius: 10, objectFit: "cover" },
-  previewLabel: { color: "#64748b", fontSize: "0.72rem", textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 2px" },
-  previewName: { color: "#e2e8f0", fontWeight: 700, margin: "0 0 2px", fontSize: "1rem" },
-  previewMeta: { color: "#64748b", fontSize: "0.8rem", margin: 0 },
-  card: {
-    background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)",
-    borderRadius: 18, padding: "28px 24px", backdropFilter: "blur(12px)",
-  },
-  title: {
-    fontSize: "1.5rem", fontWeight: 700, margin: "0 0 4px",
-    background: "linear-gradient(135deg,#f59e0b,#f97316)",
-    WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-  },
-  subtitle: { color: "#64748b", margin: "0 0 24px", fontSize: "0.88rem" },
-  starSection: { marginBottom: 22 },
-  fieldLabel: { color: "#94a3b8", fontSize: "0.8rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.07em", margin: "0 0 8px" },
-  starsRow: { display: "flex", gap: 4 },
-  starBtn: { background: "none", border: "none", cursor: "pointer", padding: "0 2px" },
-  ratingLabel: { color: "#f59e0b", fontWeight: 600, fontSize: "0.88rem", margin: "6px 0 0" },
-  fieldGroup: { marginBottom: 20 },
-  textarea: {
-    width: "100%", boxSizing: "border-box",
-    background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.12)",
-    borderRadius: 10, color: "#e2e8f0", padding: "12px 14px",
-    fontSize: "0.9rem", resize: "vertical", outline: "none",
-    fontFamily: "'Inter', sans-serif", lineHeight: 1.5,
-  },
-  statusBox: { borderRadius: 10, padding: "10px 14px", marginBottom: 18, fontSize: "0.88rem", fontWeight: 500 },
-  actions: { display: "flex", gap: 12, justifyContent: "flex-end" },
-  cancelBtn: {
-    padding: "10px 20px", borderRadius: 10, background: "rgba(255,255,255,0.06)",
-    border: "1px solid rgba(255,255,255,0.12)", color: "#94a3b8",
-    fontWeight: 600, cursor: "pointer", fontSize: "0.88rem",
-  },
-  submitBtn: {
-    padding: "10px 24px", borderRadius: 10,
-    background: "linear-gradient(135deg, #f59e0b, #d97706)",
-    color: "#fff", fontWeight: 700, border: "none", cursor: "pointer", fontSize: "0.88rem",
-    boxShadow: "0 4px 16px rgba(245,158,11,0.3)", transition: "opacity 0.2s",
-  },
-};
 
 export default LeaveFeedback;

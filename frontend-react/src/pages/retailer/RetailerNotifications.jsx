@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axiosInstance from "../../api/axiosInstance";
 import { useAuth } from "../../context/AuthContext";
 import DashboardLayout from "../../components/layout/DashboardLayout";
+import { FiBell, FiPackage, FiTruck, FiCheck, FiXCircle, FiBox } from "react-icons/fi";
 
 function RetailerNotifications() {
   const { user } = useAuth();
@@ -22,6 +23,26 @@ function RetailerNotifications() {
     }).finally(() => setLoading(false));
   }, [user]);
 
+  function iconForStatus(s) {
+    switch (s) {
+      case "CONFIRMED": return <FiPackage className="text-blue-500" />;
+      case "SHIPPED": return <FiTruck className="text-purple-500" />;
+      case "DELIVERED": return <FiCheck className="text-green-500" />;
+      case "CANCELLED": return <FiXCircle className="text-red-500" />;
+      default: return <FiBell className="text-gray-500" />;
+    }
+  }
+
+  function bgForStatus(s) {
+    switch (s) {
+      case "CONFIRMED": return "bg-blue-50";
+      case "SHIPPED": return "bg-purple-50";
+      case "DELIVERED": return "bg-green-50";
+      case "CANCELLED": return "bg-red-50";
+      default: return "bg-gray-50";
+    }
+  }
+
   // Build notifications from orders
   const orderNotifs = orders
     .filter(o => o.orderStatus !== "PENDING")
@@ -29,7 +50,7 @@ function RetailerNotifications() {
       id: `order-${o.id}`,
       type: "order",
       icon: iconForStatus(o.orderStatus),
-      color: colorForStatus(o.orderStatus),
+      bgClass: bgForStatus(o.orderStatus),
       title: `Order #${o.id} — ${o.orderStatus}`,
       body: `Your order for "${o.productName || "a product"}" is now ${o.orderStatus.toLowerCase()}.`,
       time: null,
@@ -39,8 +60,8 @@ function RetailerNotifications() {
   const productNotifs = products.map(p => ({
     id: `product-${p.id}`,
     type: "product",
-    icon: "🌾",
-    color: "#34d399",
+    icon: <FiBox className="text-primary" />,
+    bgClass: "bg-primary-light/20",
     title: `New product listed: ${p.productName}`,
     body: `${p.category} • ₹${p.price}/unit • ${p.quantity} kg available`,
     time: null,
@@ -49,92 +70,45 @@ function RetailerNotifications() {
   const all = [...orderNotifs, ...productNotifs];
 
   return (
-    <DashboardLayout>
-      <div style={styles.page}>
-        <div style={styles.header}>
-          <h2 style={styles.title}>🔔 Notifications</h2>
-          <p style={styles.subtitle}>Order updates and new product alerts.</p>
-        </div>
+    <DashboardLayout title="Notifications">
+      <div className="mb-8">
+        <h2 className="text-2xl font-bold text-text-dark mb-1">Notifications</h2>
+        <p className="text-text-medium">Order updates and new product alerts.</p>
+      </div>
 
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden animate-in fade-in max-w-3xl">
         {loading ? (
-          <div style={styles.loaderWrap}>
-            <div style={styles.spinner}></div>
+          <div className="flex justify-center items-center h-64">
+            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary"></div>
           </div>
         ) : all.length === 0 ? (
-          <div style={styles.empty}>
-            <span style={{ fontSize: "3rem" }}>📭</span>
-            <h3 style={{ color: "#e2e8f0", margin: "12px 0 6px" }}>All caught up!</h3>
-            <p style={{ color: "#64748b" }}>No notifications yet. Check back after placing an order.</p>
+          <div className="p-16 text-center flex flex-col items-center justify-center">
+            <div className="text-6xl mb-4 text-gray-200"><FiBell /></div>
+            <h3 className="text-xl font-bold text-text-dark mb-2">All caught up!</h3>
+            <p className="text-text-medium">No notifications yet. Check back after placing an order.</p>
           </div>
         ) : (
-          <div style={styles.list}>
+          <div className="divide-y divide-gray-100">
             {all.map((n, i) => (
-              <div key={n.id} style={{ ...styles.item, animationDelay: `${i * 50}ms` }}>
-                <div style={{ ...styles.iconBox, background: n.color + "22", border: `1px solid ${n.color}55` }}>
-                  <span style={{ fontSize: "1.3rem" }}>{n.icon}</span>
+              <div 
+                key={n.id} 
+                className="p-4 sm:p-6 flex items-start gap-4 hover:bg-gray-50/50 transition-colors"
+                style={{ animationFillMode: "both", animationDelay: `${i * 50}ms` }}
+              >
+                <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-xl shrink-0 ${n.bgClass}`}>
+                  {n.icon}
                 </div>
-                <div style={styles.content}>
-                  <p style={styles.nTitle}>{n.title}</p>
-                  <p style={styles.nBody}>{n.body}</p>
+                <div className="flex-1 min-w-0">
+                  <p className="font-bold text-text-dark text-base mb-1 truncate">{n.title}</p>
+                  <p className="text-text-medium text-sm leading-relaxed">{n.body}</p>
                 </div>
-                <div style={{ ...styles.dot, background: n.color }}></div>
               </div>
             ))}
           </div>
         )}
       </div>
-      <style>{`
-        @keyframes spin { to { transform: rotate(360deg); } }
-        @keyframes slideIn {
-          from { opacity: 0; transform: translateX(-14px); }
-          to   { opacity: 1; transform: translateX(0); }
-        }
-      `}</style>
     </DashboardLayout>
   );
 }
-
-function iconForStatus(s) {
-  return { CONFIRMED: "✅", SHIPPED: "🚚", DELIVERED: "📦", CANCELLED: "❌" }[s] || "ℹ️";
-}
-function colorForStatus(s) {
-  return { CONFIRMED: "#60a5fa", SHIPPED: "#a78bfa", DELIVERED: "#34d399", CANCELLED: "#f87171" }[s] || "#94a3b8";
-}
-
-const styles = {
-  page: { padding: "8px", fontFamily: "'Inter', sans-serif" },
-  header: { marginBottom: 24 },
-  title: {
-    fontSize: "1.8rem", fontWeight: 700, margin: "0 0 4px",
-    background: "linear-gradient(135deg, #00e5ff, #7c4dff)",
-    WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-  },
-  subtitle: { color: "#64748b", margin: 0, fontSize: "0.9rem" },
-  loaderWrap: { display: "flex", justifyContent: "center", padding: "60px 0" },
-  spinner: {
-    width: 36, height: 36, border: "3px solid rgba(124,77,255,0.2)",
-    borderTopColor: "#7c4dff", borderRadius: "50%", animation: "spin 0.8s linear infinite",
-  },
-  empty: {
-    textAlign: "center", padding: "70px 20px",
-    background: "rgba(255,255,255,0.03)", border: "1px dashed rgba(255,255,255,0.1)", borderRadius: 16,
-  },
-  list: { display: "flex", flexDirection: "column", gap: 10 },
-  item: {
-    display: "flex", alignItems: "center", gap: 14,
-    background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)",
-    borderRadius: 14, padding: "14px 16px",
-    backdropFilter: "blur(8px)", animation: "slideIn 0.4s ease both",
-    transition: "background 0.2s",
-  },
-  iconBox: {
-    width: 44, height: 44, borderRadius: 12, flexShrink: 0,
-    display: "flex", alignItems: "center", justifyContent: "center",
-  },
-  content: { flex: 1 },
-  nTitle: { color: "#e2e8f0", fontWeight: 600, fontSize: "0.92rem", margin: "0 0 3px" },
-  nBody: { color: "#64748b", fontSize: "0.82rem", margin: 0 },
-  dot: { width: 8, height: 8, borderRadius: "50%", flexShrink: 0 },
-};
 
 export default RetailerNotifications;
