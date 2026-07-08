@@ -7,6 +7,7 @@ D:\farmer-retailer-platform\backend\src\main\java\com\farmer\controller\AdminCon
 D:\farmer-retailer-platform\backend\src\main\java\com\farmer\controller\AuthController.java
 D:\farmer-retailer-platform\backend\src\main\java\com\farmer\controller\FarmerController.java
 D:\farmer-retailer-platform\backend\src\main\java\com\farmer\controller\FeedbackController.java
+D:\farmer-retailer-platform\backend\src\main\java\com\farmer\controller\NotificationController.java
 D:\farmer-retailer-platform\backend\src\main\java\com\farmer\controller\OrderController.java
 D:\farmer-retailer-platform\backend\src\main\java\com\farmer\controller\PaymentController.java
 D:\farmer-retailer-platform\backend\src\main\java\com\farmer\controller\ProductController.java
@@ -18,6 +19,7 @@ D:\farmer-retailer-platform\backend\src\main\java\com\farmer\FarmerPlatformAppli
 D:\farmer-retailer-platform\backend\src\main\java\com\farmer\model\Admin.java
 D:\farmer-retailer-platform\backend\src\main\java\com\farmer\model\Farmer.java
 D:\farmer-retailer-platform\backend\src\main\java\com\farmer\model\Feedback.java
+D:\farmer-retailer-platform\backend\src\main\java\com\farmer\model\Notification.java
 D:\farmer-retailer-platform\backend\src\main\java\com\farmer\model\Order.java
 D:\farmer-retailer-platform\backend\src\main\java\com\farmer\model\Payment.java
 D:\farmer-retailer-platform\backend\src\main\java\com\farmer\model\Product.java
@@ -26,6 +28,7 @@ D:\farmer-retailer-platform\backend\src\main\java\com\farmer\model\User.java
 D:\farmer-retailer-platform\backend\src\main\java\com\farmer\repository\AdminRepository.java
 D:\farmer-retailer-platform\backend\src\main\java\com\farmer\repository\FarmerRepository.java
 D:\farmer-retailer-platform\backend\src\main\java\com\farmer\repository\FeedbackRepository.java
+D:\farmer-retailer-platform\backend\src\main\java\com\farmer\repository\NotificationRepository.java
 D:\farmer-retailer-platform\backend\src\main\java\com\farmer\repository\OrderRepository.java
 D:\farmer-retailer-platform\backend\src\main\java\com\farmer\repository\PaymentRepository.java
 D:\farmer-retailer-platform\backend\src\main\java\com\farmer\repository\ProductRepository.java
@@ -35,6 +38,7 @@ D:\farmer-retailer-platform\backend\src\main\java\com\farmer\service\AdminServic
 D:\farmer-retailer-platform\backend\src\main\java\com\farmer\service\AuthService.java
 D:\farmer-retailer-platform\backend\src\main\java\com\farmer\service\FarmerService.java
 D:\farmer-retailer-platform\backend\src\main\java\com\farmer\service\FeedbackService.java
+D:\farmer-retailer-platform\backend\src\main\java\com\farmer\service\NotificationService.java
 D:\farmer-retailer-platform\backend\src\main\java\com\farmer\service\PaymentService.java
 D:\farmer-retailer-platform\backend\src\main\java\com\farmer\service\ProductService.java
 D:\farmer-retailer-platform\backend\src\main\java\com\farmer\service\RetailerService.java
